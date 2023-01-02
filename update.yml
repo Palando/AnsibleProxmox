@@ -1,0 +1,44 @@
+---
+- name: Install Proxmox
+  hosts: all
+  tasks:
+
+    - name: Add Proxmox repository key
+      ansible.builtin.apt_key:
+        url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
+        state: present
+
+    - name: Add Proxmox repository
+      ansible.builtin.apt_repository: 
+        repo: deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+        state: present 
+        update_cache: no
+
+    - name: Update apt cache if it is older than 10 minutes
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 600
+
+    - name: Update all packages to their latest version
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+
+    - name: Upgrade the OS (apt-get dist-upgrade)
+      ansible.builtin.apt:
+        upgrade: dist
+
+    - name: Install needful packages
+      ansible.builtin.package:
+        name:
+          - tmux
+          - htop
+          - vim
+          - open-iscsi
+        state: latest
+
+    - name: Uninstall OS prober
+      ansible.builtin.package:
+        name:
+          - os-prober
+        state: absent
