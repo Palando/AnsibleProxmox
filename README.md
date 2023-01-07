@@ -1,3 +1,3 @@
 # Ansible Proxmox
 
-Ansible Playbook to install Proxmox
+Try to install Proxmox with Ansible. Only started yet.
